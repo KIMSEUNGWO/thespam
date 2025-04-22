@@ -1,6 +1,6 @@
-// lib/component/call_detection_service.dart
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:spam2/component/callkit_component.dart';
 
 class CallDetectionService {
   static final CallDetectionService _instance = CallDetectionService._internal();
@@ -13,10 +13,13 @@ class CallDetectionService {
   }
 
   Future<void> initialize() async {
+    print("Flutter: 통화 감지 서비스 초기화 시작");
     try {
       await _channel.invokeMethod('initializeCallScreening');
+      await _channel.invokeMethod('startCallDetectionService');
+      print("Flutter: 통화 감지 서비스 초기화 완료");
     } catch (e) {
-      print('CallDetectionService 초기화 오류: $e');
+      print("Flutter: 통화 감지 서비스 초기화 오류: $e");
     }
   }
 
@@ -53,8 +56,11 @@ class CallDetectionService {
     return null;
   }
 
-  void _handleCallDetected(String phoneNumber, bool isSpam, int callDirection) {
+  void _handleCallDetected(String phoneNumber, bool isSpam, int callDirection) async {
     print('전화 감지: $phoneNumber, 스팸: $isSpam, 방향: $callDirection');
+    if (isSpam) {
+      // await CallkitComponent().showCallkit(phoneNumber);
+    }
     // UI 업데이트 또는 다른 처리 수행
   }
 
@@ -67,5 +73,8 @@ class CallDetectionService {
   Future<void> _sendReportToServer(String phoneNumber, int duration) async {
     // 서버 API 호출 구현
     print('서버에 보고: $phoneNumber, $duration초');
+  }
+  invokeMethod(String method) async {
+    await _channel.invokeMethod(method);
   }
 }

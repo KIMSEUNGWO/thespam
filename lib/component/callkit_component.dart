@@ -19,6 +19,9 @@ class CallkitComponent {
 
 
   init() async {
+    if (!await Permission.phone.isGranted) {
+      await Permission.phone.request();
+    }
     if (Platform.isAndroid) {
       await _androidInit();
     } else if (Platform.isIOS) {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/overlay_root"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="12dp"
+              android:orientation="horizontal"
+              android:background="#CCFF4444"
+              android:elevation="6dp"
+              android:layout_margin="12dp"
+              android:gravity="center_vertical"
+              android:backgroundTint="#BBFF4444"
+              android:clipToPadding="false"
+              android:layout_gravity="top"
+              android:backgroundTintMode="src_over">
+
+    <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_dialog_alert"
+            android:tint="#FFFFFF"
+            android:layout_marginEnd="8dp" />
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        <TextView
+                android:id="@+id/phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="010-0000-0000"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+        <TextView
+                android:id="@+id/spam_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="스팸 전화로 의심됩니다"
+                android:textColor="#FFFDE7"
+                android:textSize="14sp" />
+    </LinearLayout>
+
+    <ImageView
+            android:id="@+id/close_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="#FFFFFF" />
+</LinearLayout>
