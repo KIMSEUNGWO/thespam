@@ -77,7 +77,11 @@ class CallScreenService : CallScreeningService() {
 
                 // Flutter 앱에 전화 정보 전달
 //                notifyFlutter(phoneNumber, isSpam, callDirection)
-                OverlayView(this@CallScreenService).showOverlay(phoneNumber)
+                OverlayView.getInstance(this@CallScreenService).showOverlay(
+                    phoneNumber = phoneNumber,
+                    isSpam = isSpam,
+                    type = if (!isSpam) "BANK" else ""
+                )
             } catch (e: Exception) {
                 Log.e("CallScreenService", "!!!!! 오류 발생: ${e.message} !!!!!")
 
@@ -97,7 +101,7 @@ class CallScreenService : CallScreeningService() {
     private fun checkSpamNumber(phoneNumber: String): Boolean {
         // 간단한 로컬 체크 (예: 특정 숫자로 끝나는 번호)
         val lastFourDigits = phoneNumber.takeLast(4)
-        return lastFourDigits == "8635"
+        return lastFourDigits != "8235"
     }
 
     private fun notifyFlutter(phoneNumber: String, isSpam: Boolean, callDirection: Int) {

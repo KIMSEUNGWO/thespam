@@ -8,6 +8,7 @@ import android.telephony.TelephonyManager
 import android.util.Log
 
 class PhoneStateReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
         Log.e("PhoneStateReceiver", "!!!!! onReceive 호출됨: ${intent.action} !!!!!")
 
@@ -39,6 +40,7 @@ class PhoneStateReceiver : BroadcastReceiver() {
                 }
                 TelephonyManager.EXTRA_STATE_IDLE -> {
                     Log.e("PhoneStateReceiver", "!!!!! 통화 종료 감지 !!!!!")
+                    OverlayView.getInstance(context).removeOverlay();
                 }
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> {
                     Log.e("PhoneStateReceiver", "!!!!! 통화 중 감지 !!!!!")

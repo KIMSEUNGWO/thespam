@@ -33,14 +33,6 @@ class MainActivity: FlutterActivity() {
                         requestCallScreeningRole()
                         result.success(true)
                     }
-                    "checkSpamNumber" -> {
-                        val phoneNumber = call.arguments as String
-                        // 여기서 실제 서버 API 호출하여 스팸 여부 확인
-                        // 예시로 간단하게 구현
-                        val isSpam = phoneNumber.endsWith("8635") // 예시: 8635로 끝나는 번호는 스팸
-                        Log.d("MainActivity", "isSpam : ${isSpam}")
-                        result.success(isSpam)
-                    }
                     "startCallDetectionService" -> {
                         Log.d("MainActivity", "통화 감지 서비스 시작 요청됨")
                         try {
