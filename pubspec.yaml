@@ -12,9 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_svg: ^2.0.15 # SVG 파일 열기
   cupertino_icons: ^1.0.8
   flutter_callkit_incoming: ^2.5.2
-  device_info_plus: ^11.3.3
   uuid: ^4.5.1
   permission_handler: ^12.0.0+1
 
@@ -27,5 +27,27 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
-
   uses-material-design: true
+  assets:
+    - assets/
+    - assets/icons/
+    - assets/icons/flags/
+    - assets/fonts/
+
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Pretendard-Bold.otf
+          weight: 700
+    - family : Tmoney
+      fonts :
+        - asset: assets/fonts/TmoneyRoundWindRegular.otf
+          weight: 500
+        - asset : assets/fonts/TmoneyRoundWindExtraBold.otf
+          weight: 600

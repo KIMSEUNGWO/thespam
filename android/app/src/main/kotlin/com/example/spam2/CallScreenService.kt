@@ -21,16 +21,13 @@ class CallScreenService : CallScreeningService() {
     }
 
     override fun onScreenCall(callDetails: Call.Details) {
-        // 로그 추가 - 매우 명확하게 표시
         Log.e("CallScreenService", "!!!!! onScreenCall 호출됨 !!!!!")
 
         // 전화 방향 확인 (수신/발신)
         val callDirection = callDetails.callDirection
-        Log.e("CallScreenService", "!!!!! 통화 방향: $callDirection !!!!!")
-
         // 수신 전화인지 확인 (Android 11+ 제한 사항 고려)
         val isIncoming = callDirection == Call.Details.DIRECTION_INCOMING
-        Log.e("CallScreenService", "!!!!! 수신 전화 여부: $isIncoming !!!!!")
+        Log.e("CallScreenService", "!!!!! 통화 방향: $callDirection, 수신 전화 여부: $isIncoming !!!!!")
 
         // Android 11 이상에서는 수신 전화에 대해서만 번호를 확인할 수 있음
         val phoneNumber = if (isIncoming || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
@@ -41,23 +38,15 @@ class CallScreenService : CallScreeningService() {
 
         if (phoneNumber.isNullOrEmpty()) {
             Log.e("CallScreenService", "!!!!! 전화번호가 null이거나 비어 있음 !!!!!")
-
             // 번호를 알 수 없더라도 기본 응답 생성
-            val response = CallResponse.Builder()
-                .setDisallowCall(false)
-                .setRejectCall(false)
-                .setSilenceCall(false)
-                .build()
-
-            // 응답 전송 (지연되지 않도록 빠르게 처리)
-            respondToCall(callDetails, response)
+            sendDefaultCall(callDetails)
             return
         }
 
-        Log.e("CallScreenService", "!!!!! 감지된 전화번호: $phoneNumber !!!!!")
 
         // 빠른 응답을 위해 메인 로직을 간소화
         CoroutineScope(Dispatchers.Main).launch {
+            Log.e("CallScreenService", "!!!!! 감지된 전화번호: $phoneNumber !!!!!")
             try {
                 // 스팸 여부 확인 (캐싱된 결과 또는 간단한 로컬 체크)
                 val isSpam = checkSpamNumber(phoneNumber)
@@ -76,7 +65,6 @@ class CallScreenService : CallScreeningService() {
                 respondToCall(callDetails, response)
 
                 // Flutter 앱에 전화 정보 전달
-//                notifyFlutter(phoneNumber, isSpam, callDirection)
                 OverlayView.getInstance(this@CallScreenService).showOverlay(
                     phoneNumber = phoneNumber,
                     isSpam = isSpam,
@@ -84,38 +72,27 @@ class CallScreenService : CallScreeningService() {
                 )
             } catch (e: Exception) {
                 Log.e("CallScreenService", "!!!!! 오류 발생: ${e.message} !!!!!")
-
                 // 오류 발생 시 기본 응답
-                val response = CallResponse.Builder()
-                    .setDisallowCall(false)
-                    .setRejectCall(false)
-                    .setSilenceCall(false)
-                    .build()
-
-                respondToCall(callDetails, response)
+                sendDefaultCall(callDetails)
             }
         }
+    }
+
+    private fun sendDefaultCall(callDetails: Call.Details) {
+        // 오류 발생 시 기본 응답
+        val response = CallResponse.Builder()
+            .setDisallowCall(false)
+            .setRejectCall(false)
+            .setSilenceCall(false)
+            .build()
+
+        respondToCall(callDetails, response)
     }
 
     // 간단한 로컬 스팸 체크 (빠른 응답을 위해)
     private fun checkSpamNumber(phoneNumber: String): Boolean {
         // 간단한 로컬 체크 (예: 특정 숫자로 끝나는 번호)
         val lastFourDigits = phoneNumber.takeLast(4)
-        return lastFourDigits != "8235"
-    }
-
-    private fun notifyFlutter(phoneNumber: String, isSpam: Boolean, callDirection: Int) {
-        try {
-            val data = JSONObject().apply {
-                put("phoneNumber", phoneNumber)
-                put("isSpam", isSpam)
-                put("callDirection", callDirection)
-            }
-
-            methodChannel?.invokeMethod("onCallDetected", data.toString())
-            Log.e("CallScreenService", "!!!!! Flutter에 알림 전송 성공 !!!!!")
-        } catch (e: Exception) {
-            Log.e("CallScreenService", "!!!!! Flutter에 알림 전송 실패: ${e.message} !!!!!")
-        }
+        return lastFourDigits == "8635"
     }
 }

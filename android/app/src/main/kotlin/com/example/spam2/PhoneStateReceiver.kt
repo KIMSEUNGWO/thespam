@@ -29,7 +29,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
             when (state) {
                 TelephonyManager.EXTRA_STATE_RINGING -> {
                     // 전화 수신 중
-
                     Log.e("PhoneStateReceiver", "!!!!! 전화 벨 울림 감지 !!!!!")
                     if (!phoneNumber.isNullOrEmpty()) {
                         // Flutter로 전화 정보 전달

@@ -5,7 +5,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import android.telecom.TelecomManager
 import android.provider.Settings
 import android.app.role.RoleManager
@@ -14,7 +13,6 @@ import android.app.ActivityManager
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.telephony.TelephonyManager
 import androidx.core.content.ContextCompat
 import android.net.Uri
 
@@ -29,7 +27,7 @@ class MainActivity: FlutterActivity() {
             setMethodCallHandler { call, result ->
                 when (call.method) {
                     "initializeCallScreening" -> {
-                        android.util.Log.d("MainActivity", "initializeCallScreening 호출됨")
+                        Log.d("MainActivity", "initializeCallScreening 호출됨")
                         requestCallScreeningRole()
                         result.success(true)
                     }

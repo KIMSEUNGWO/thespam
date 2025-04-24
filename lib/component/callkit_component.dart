@@ -1,10 +1,12 @@
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:spam2/setting/AndroidDevice.dart';
+import 'package:spam2/setting/Device.dart';
+import 'package:spam2/setting/IOSDevice.dart';
 import 'package:uuid/uuid.dart';
 
 class CallkitComponent {
@@ -12,7 +14,9 @@ class CallkitComponent {
   static final CallkitComponent _instance = CallkitComponent._internal();
   factory CallkitComponent() => _instance;
 
-  final _deviceInfo = DeviceInfoPlugin();
+  final Device _device =  Platform.isAndroid ? AndroidDevice() :
+                          Platform.isIOS ? IOSDevice() :
+                          throw UnimplementedError();
   final Uuid _uuid = Uuid();
 
   CallkitComponent._internal();
@@ -22,12 +26,7 @@ class CallkitComponent {
     if (!await Permission.phone.isGranted) {
       await Permission.phone.request();
     }
-    if (Platform.isAndroid) {
-      await _androidInit();
-    } else if (Platform.isIOS) {
-      await _iOSInit();
-    }
-    await _listenerEvent();
+    await _device.init();
   }
   showCallkit(String phoneNumber) async {
     CallKitParams callKitParams = CallKitParams(
@@ -38,66 +37,10 @@ class CallkitComponent {
         type: 0,
         textAccept: '승인',
         textDecline: '거절',
-
-        android: _androidParam,
         ios: iOSParam
     );
 
     await FlutterCallkitIncoming.showCallkitIncoming(callKitParams);
-  }
-  _androidInit() async {
-    if (await Permission.notification.isGranted) return;
-    var androidInfo = await _deviceInfo.androidInfo;
-    var sdkVersion = androidInfo.version.sdkInt;
-
-    print('CallkitComponent._androidInit $sdkVersion');
-    // Android 13 이상 (SDK 33+)
-    if (sdkVersion >= 33) {
-      await FlutterCallkitIncoming.requestNotificationPermission({
-        "rationaleMessagePermission": "전화 알림을 표시하기 위해 권한이 필요합니다.",
-        "postNotificationMessageRequired": "알림 권한이 필요합니다. 설정에서 허용해주세요."
-      });
-    } else if (sdkVersion >= 34) {
-      print('CallkitComponent._androidInit 2');
-      // Android 14 이상 (SDK 34+)
-      await FlutterCallkitIncoming.requestFullIntentPermission();
-    }
-  }
-  _iOSInit() async {
-
-  }
-
-  Future<void> _listenerEvent() async {
-    FlutterCallkitIncoming.onEvent.listen((CallEvent? event) {
-      switch (event!.event) {
-        case Event.actionCallIncoming:
-        // 전화 수신 이벤트
-          debugPrint('전화 수신');
-          break;
-        case Event.actionCallAccept:
-        // 전화 수락 처리
-          debugPrint('전화 수락');
-          break;
-        case Event.actionCallDecline:
-          debugPrint('전화 거절');
-          // 전화 거절 처리
-          break;
-        case Event.actionCallEnded:
-        // 통화 종료 처리
-          debugPrint('전화 통화 종료');
-          break;
-        case Event.actionCallTimeout:
-        // 타임아웃 처리 (부재중 전화)
-          debugPrint('부재중 처리');
-          break;
-        case Event.actionCallCallback:
-        // 부재중 전화 콜백 처리
-          debugPrint('부재중 전화 콜백');
-          break;
-        default:
-          print('필요없음~');
-      }
-    });
   }
 
   final iOSParam = const IOSParams(
@@ -115,25 +58,4 @@ class CallkitComponent {
     ringtonePath: 'system_ringtone_default', // 벨소리 경로
   );
 
-  final _androidParam = const AndroidParams(
-      isCustomNotification: true,
-      // 커스텀 알림 사용 여부
-      isShowLogo: false,
-      // 로고 표시 여부
-      // logoUrl: 'https://i.pravatar.cc/100', // 로고 URL
-      ringtonePath: 'system_ringtone_default',
-      // 벨소리 경로
-      backgroundColor: '#0955fa',
-      // 배경색
-      // backgroundUrl: 'https://i.pravatar.cc/500', // 배경 이미지 URL
-      actionColor: '#4CAF50',
-      // 액션 버튼 색상
-      textColor: '#ffffff',
-      // 텍스트 색상
-      incomingCallNotificationChannelName: "Incoming Call",
-      // 수신 전화 알림 채널명
-      missedCallNotificationChannelName: "Missed Call",
-      // 부재중 전화 알림 채널명
-      isShowCallID: false // 통화 ID 표시 여부
-  );
 }

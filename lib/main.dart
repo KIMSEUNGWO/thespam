@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spam2/component/CallDetectionService.dart';
 import 'package:spam2/component/callkit_component.dart';
+import 'package:spam2/widget/HomeWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,24 +41,74 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('통화 앱 예제'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  await CallkitComponent().showCallkit('01012341234');
-                },
-                child: Text('테스트 전화 받기'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      home: const HomeWidget(),
+      theme: _themeData(),
     );
   }
+}
+
+_themeData() {
+  return ThemeData(
+    fontFamily: 'Pretendard',
+    scaffoldBackgroundColor: Colors.white,
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      scrolledUnderElevation: 0,
+      backgroundColor: Color(0xFFF7F7FB),
+      titleTextStyle: TextStyle(
+        color: Color(0xFF2A2E43),
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+      ),
+    ),
+    colorScheme: const ColorScheme.light(
+
+      onPrimary: Color(0xFF41BA45), // 메인 컬러 1
+
+      primary: Color(0xFF2A2E43), // 폰트 컬러 1
+      secondary: Color(0xFF45495E), // 폰트 컬러 2
+      tertiary: Color(0xFF777984), // 폰트 컬러 3
+
+      error: Color(0xFFE42323),
+    ),
+    textTheme: const TextTheme(
+      displayLarge: TextStyle(
+        fontSize: 26,
+        color: Color(0xFF2A2E43),
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+      ),
+      displayMedium: TextStyle(
+        fontSize: 21,
+        color: Color(0xFF2A2E43),
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+      ),
+      displaySmall: TextStyle(
+        fontSize: 18,
+        color: Color(0xFF45495E),
+        fontWeight: FontWeight.w500,
+        height: 1.4,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: Color(0xFF45495E),
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        color: Color(0xFF777984),
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 12,
+        color: Color(0xFF777984),
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+      ),
+    ),
+  );
 }
