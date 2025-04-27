@@ -14,20 +14,10 @@ class CallkitComponent {
   static final CallkitComponent _instance = CallkitComponent._internal();
   factory CallkitComponent() => _instance;
 
-  final Device _device =  Platform.isAndroid ? AndroidDevice() :
-                          Platform.isIOS ? IOSDevice() :
-                          throw UnimplementedError();
   final Uuid _uuid = Uuid();
 
   CallkitComponent._internal();
 
-
-  init() async {
-    if (!await Permission.phone.isGranted) {
-      await Permission.phone.request();
-    }
-    await _device.init();
-  }
   showCallkit(String phoneNumber) async {
     CallKitParams callKitParams = CallKitParams(
         id: _uuid.v4(),

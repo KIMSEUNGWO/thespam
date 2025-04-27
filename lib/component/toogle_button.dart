@@ -46,7 +46,7 @@ class _ToggleButtonState extends State<ToggleButton> {
         height: widget.decoration.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          color: isToggled ? widget.decoration.color : const Color(0xFFD9D9D9),
+          color: isToggled ? widget.decoration.color : const Color(0xFFE42323),
         ),
         child: Stack(
           children: [
@@ -71,6 +71,9 @@ class _ToggleButtonState extends State<ToggleButton> {
                   shape: BoxShape.circle,
                   color: Colors.white,
                 ),
+                child: isToggled
+                  ? const Icon(Icons.check_rounded, color: Color(0xFF41BA45),)
+                  : const Icon(Icons.close_rounded, color: Color(0xFFE42323),),
               ),
             ),
           ],

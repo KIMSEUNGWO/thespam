@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:spam2/component/CallDetectionService.dart';
-import 'package:spam2/component/callkit_component.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spam2/notifier/ServiceNotifier.dart';
+import 'package:spam2/setting/DeviceController.dart';
 import 'package:spam2/widget/HomeWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await CallkitComponent().init();
-  await CallDetectionService().initialize();
-
-  runApp(const MyApp());
+  DeviceHelper().init();
+  runApp(const ProviderScope(
+    child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,9 +17,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return const MaterialApp(
+      title: '통화맑음',
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -29,15 +30,12 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,7 +52,7 @@ _themeData() {
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       scrolledUnderElevation: 0,
-      backgroundColor: Color(0xFFF7F7FB),
+      backgroundColor: Colors.white,
       titleTextStyle: TextStyle(
         color: Color(0xFF2A2E43),
         fontSize: 20,

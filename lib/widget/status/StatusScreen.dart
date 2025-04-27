@@ -1,32 +1,48 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spam2/component/FontTheme.dart';
 import 'package:spam2/component/svg_icon.dart';
+import 'package:spam2/component/toogle_button.dart';
 import 'package:spam2/enums/Status.dart';
+import 'package:spam2/notifier/ServiceNotifier.dart';
 
-class StatusScreen extends StatefulWidget {
-  const StatusScreen({super.key});
+class StatusScreen extends ConsumerStatefulWidget {
+  final Function(bool loading) loading;
+  const StatusScreen({super.key, required this.loading});
 
   @override
-  State<StatusScreen> createState() => _StatusScreenState();
+  createState() => _StatusScreenState();
 }
 
-class _StatusScreenState extends State<StatusScreen> {
+class _StatusScreenState extends ConsumerState<StatusScreen> {
 
-  late Status _status;
+  _toggle(bool isOn) async {
+    if (isOn) {
+      await ref.read(serviceNotifier.notifier).startService();
+    } else {
+      await ref.read(serviceNotifier.notifier).stopService();
+    }
+  }
 
+  _requestPermissions() async {
+    widget.loading(true);
+    await ref.read(serviceNotifier.notifier).requestPermissions();
+    widget.loading(false);
+  }
 
   @override
   Widget build(BuildContext context) {
+    Status status = ref.watch(serviceNotifier);
     return SizedBox(
       width: double.infinity,
       child: Stack(
         children: [
           Container(
             width: double.infinity, height: MediaQuery.of(context).size.height * 0.5,
-            decoration: const BoxDecoration(
-              color: Color(0xFFB7B7B7),
+            decoration: BoxDecoration(
+              color: status.backgroundColor,
             ),
           ),
 
@@ -48,9 +64,9 @@ class _StatusScreenState extends State<StatusScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgIcon.asset(sIcon: SIcon.statusExit),
+                  SvgIcon.asset(sIcon: status.icon),
                   const SizedBox(height: 16,),
-                  Text('권한을 설정해주세요.',
+                  Text(status.title,
                     style: FontTheme.of(context,
                       size: FontSize.displayLarge,
                       color: Colors.white,
@@ -58,19 +74,35 @@ class _StatusScreenState extends State<StatusScreen> {
                     ),
                   ),
                   const SizedBox(height: 8,),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100)
-                    ),
-                    child: Text('권한 설정하기',
-                      style: FontTheme.of(context,
-                        size: FontSize.bodyMedium,
-                        fontColor: FontColor.f1,
+                  if (status != Status.NONE)
+                    ToggleButton(
+                      callback: () => status == Status.PROTECT,
+                      onChanged: _toggle,
+                      decoration: ToggleDecoration(
+                        width: 50,
+                        height: 30,
+                        color: const Color(0xFF41BA45)
                       ),
                     ),
-                  ),
+                  if (status == Status.NONE)
+                    GestureDetector(
+                      onTap: () {
+                        _requestPermissions();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(100)
+                        ),
+                        child: Text('권한 설정하기',
+                          style: FontTheme.of(context,
+                            size: FontSize.bodyMedium,
+                            fontColor: FontColor.f1,
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

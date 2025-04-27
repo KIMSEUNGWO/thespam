@@ -33,7 +33,7 @@ class OverlayView private constructor(private val context: Context) {
     private var windowManager: WindowManager? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun showOverlay(phoneNumber: String, isSpam: Boolean = false, type: String = "") {
+    fun showOverlay(phoneNumber: String, type: String = "NONE") {
         if (overlayView != null) return  // 이미 떠 있으면 안 띄움
 
         val inflater = LayoutInflater.from(context)
@@ -46,7 +46,7 @@ class OverlayView private constructor(private val context: Context) {
         val overlayRoot = overlayView?.findViewById<View>(R.id.overlay_root)
         val iconView = overlayView?.findViewById<ImageView>(R.id.icon_view)
 
-        if (isSpam) {
+        if (type == "SPAM") {
             // 스팸인 경우
             overlayRoot?.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
             iconView?.setImageResource(R.drawable.ic_warning)

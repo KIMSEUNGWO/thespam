@@ -8,5 +8,11 @@ abstract class Device {
     return true;
   }
 
+  Future<bool> checkPermission();
+  Future<bool> requestPermissions();
+  Future<bool> startService();
+  Future<bool> stopService();
+  Future<bool> isServiceRunning();
+
 
 }

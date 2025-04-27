@@ -38,11 +38,12 @@ class SIcon {
 
   const SIcon({required this.picture, required this.width, required this.height});
 
-  static const SIcon gear = SIcon(picture: 'assets/icons/gear.svg', width: 21, height: 21);
+  static const SIcon gear = SIcon(picture: 'assets/icons/gear.svg', width: 28, height: 28);
   static const SIcon search = SIcon(picture: 'assets/icons/search.svg', width: 24, height: 24);
-
   static const SIcon clock = SIcon(picture: 'assets/icons/menu_clock.svg', width: 20, height: 20);
   static const SIcon block = SIcon(picture: 'assets/icons/menu_block.svg', width: 20, height: 20);
+  static const SIcon notify = SIcon(picture: 'assets/icons/notify.svg', width: 16, height: 16);
+  static const SIcon report = SIcon(picture: 'assets/icons/report.svg', width: 22, height: 22);
 
   static const SIcon toggleProtect = SIcon(picture: 'assets/icons/toggle_protect.svg', width: 26, height: 26);
   static const SIcon toggleStop = SIcon(picture: 'assets/icons/toggle_stop.svg', width: 26, height: 26);
@@ -53,6 +54,10 @@ class SIcon {
 
 
   static const SIcon flagKr = SIcon(picture: 'assets/icons/flags/kr.svg', width: 32, height: 24);
+
+  static const SIcon searchNotFound = SIcon(picture: 'assets/icons/search_notfound.svg', width: 50, height: 50);
+  static const SIcon searchWarning = SIcon(picture: 'assets/icons/search_warning.svg', width: 50, height: 50);
+  static const SIcon searchSafe = SIcon(picture: 'assets/icons/search_safe.svg', width: 50, height: 50);
 
 
 

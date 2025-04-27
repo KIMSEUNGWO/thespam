@@ -3,13 +3,13 @@ package com.example.spam2
 import android.os.Build
 import android.telecom.Call
 import android.telecom.CallScreeningService
-import android.telecom.Connection
 import android.util.Log
 import androidx.annotation.RequiresApi
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.spam2.SpamCheckResult
 import org.json.JSONObject
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -49,14 +49,14 @@ class CallScreenService : CallScreeningService() {
             Log.e("CallScreenService", "!!!!! 감지된 전화번호: $phoneNumber !!!!!")
             try {
                 // 스팸 여부 확인 (캐싱된 결과 또는 간단한 로컬 체크)
-                val isSpam = checkSpamNumber(phoneNumber)
-                Log.e("CallScreenService", "!!!!! 스팸 여부: $isSpam !!!!!")
+                val spamCheckResult = checkSpamNumber(phoneNumber)
+                Log.e("CallScreenService", "!!!!! 스팸 여부: ${spamCheckResult.type} !!!!!")
 
                 // 응답 생성 - 스팸이면 라벨 표시 및 음소거 적용
                 val response = CallResponse.Builder()
                     .setDisallowCall(false)  // 통화 차단 안 함
                     .setRejectCall(false)    // 거절 안 함
-                    .setSilenceCall(isSpam)  // 스팸이면 음소거
+//                    .setSilenceCall(isSpam)  // 스팸이면 음소거
                     .setSkipCallLog(false)   // 통화 기록 남김
                     .setSkipNotification(false) // 알림 표시
                     .build()
@@ -64,12 +64,17 @@ class CallScreenService : CallScreeningService() {
                 // 응답 전송
                 respondToCall(callDetails, response)
 
-                // Flutter 앱에 전화 정보 전달
                 OverlayView.getInstance(this@CallScreenService).showOverlay(
                     phoneNumber = phoneNumber,
-                    isSpam = isSpam,
-                    type = if (!isSpam) "BANK" else ""
+                    type = spamCheckResult.type
                 )
+
+                // Flutter 앱에 전화 정보 전달
+//                if (spamCheckResult.type == "SPAM") {
+                    CallManager.setSpamResult(spamCheckResult)
+                    MethodChannelHandler.sendCallInfo(spamCheckResult)
+//                }
+
             } catch (e: Exception) {
                 Log.e("CallScreenService", "!!!!! 오류 발생: ${e.message} !!!!!")
                 // 오류 발생 시 기본 응답
@@ -83,16 +88,20 @@ class CallScreenService : CallScreeningService() {
         val response = CallResponse.Builder()
             .setDisallowCall(false)
             .setRejectCall(false)
-            .setSilenceCall(false)
+//            .setSilenceCall(false)
             .build()
 
         respondToCall(callDetails, response)
     }
 
     // 간단한 로컬 스팸 체크 (빠른 응답을 위해)
-    private fun checkSpamNumber(phoneNumber: String): Boolean {
-        // 간단한 로컬 체크 (예: 특정 숫자로 끝나는 번호)
-        val lastFourDigits = phoneNumber.takeLast(4)
-        return lastFourDigits == "8635"
+//    private fun checkSpamNumber(phoneNumber: String): Boolean {
+//        // 간단한 로컬 체크 (예: 특정 숫자로 끝나는 번호)
+//        val lastFourDigits = phoneNumber.takeLast(4)
+//        return lastFourDigits == "8635"
+//    }
+
+    private fun checkSpamNumber(phoneNumber: String): SpamCheckResult {
+        return ApiServer.spamCheck(phoneNumber)
     }
 }

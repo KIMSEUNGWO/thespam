@@ -45,6 +45,7 @@ class CallDetectionService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun startForeground() {
+        Log.d("CallDetectionService", "startForeground 시작")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "call_detection_service"
             val channel = NotificationChannel(

@@ -44,4 +44,35 @@ class IOSDevice extends Device {
     });
   }
 
+  @override
+  Future<bool> checkPermission() {
+    // TODO: implement checkPermission
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> startService() {
+    // TODO: implement startService
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isServiceRunning() {
+    // TODO: implement isServiceRunning
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> stopService() {
+    // TODO: implement stopService
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> requestPermissions() {
+    // TODO: implement requestPermissions
+    throw UnimplementedError();
+  }
+
+
 }
