@@ -58,5 +58,10 @@ enum LocalStorageKey {
   UUID,
   FCM,
 
+  BLOCKED_NUMBERS_READ_ONLY, // 차단번호 빠른 감지용
+  BLOCKED_NUMBERS_DATA, // 차단번호 자료형
+  BLOCKED_NUMBERS_RECORD // 차단기록 목록
+
+  ;
 
 }

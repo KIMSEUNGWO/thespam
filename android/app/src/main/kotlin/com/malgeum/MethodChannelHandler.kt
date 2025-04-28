@@ -2,20 +2,19 @@ package com.malgeum
 
 import android.util.Log
 import io.flutter.plugin.common.MethodChannel
-import org.json.JSONObject
 
 object MethodChannelHandler {
     var methodChannel: MethodChannel? = null
 
-    fun sendCallInfo(spamCheckResult: SpamCheckResult) {
-        methodChannel?.invokeMethod("onCallDetected", spamCheckResult.toJson())
+    fun sendCallInfo(phone: Phone) {
+        methodChannel?.invokeMethod("onCallDetected", phone.toJson())
     }
 
     fun sendCallExit() {
         methodChannel?.invokeMethod("onCallIdle", null)
     }
 
-    fun sendTimerComplete(spamResult: SpamCheckResult, duration : Int) {
+    fun sendTimerComplete(spamResult: Phone, duration : Int) {
         // Flutter 채널에 타이머 완료 및 스팸 정보 전송
         try {
             methodChannel?.invokeMethod("onTimerComplete", mapOf(

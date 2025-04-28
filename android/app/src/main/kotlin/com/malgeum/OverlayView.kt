@@ -32,7 +32,7 @@ class OverlayView private constructor(private val context: Context) {
     private var windowManager: WindowManager? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun showOverlay(phoneNumber: String, type: String = "NONE") {
+    fun showOverlay(phoneNumber: String, description : String, type: PhoneType = PhoneType.UNKNOWN) {
         if (overlayView != null) return  // 이미 떠 있으면 안 띄움
 
         val inflater = LayoutInflater.from(context)
@@ -45,27 +45,9 @@ class OverlayView private constructor(private val context: Context) {
         val overlayRoot = overlayView?.findViewById<View>(R.id.overlay_root)
         val iconView = overlayView?.findViewById<ImageView>(R.id.icon_view)
 
-        if (type == "SPAM") {
-            // 스팸인 경우
-            overlayRoot?.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
-            iconView?.setImageResource(R.drawable.ic_warning)
-            overlayView?.findViewById<TextView>(R.id.info_text)?.text = "보이스피싱"
-        } else {
-            // 스팸이 아닌 경우
-            overlayRoot?.setBackgroundColor(ContextCompat.getColor(context, R.color.green))
-
-            // 타입에 따라 아이콘 변경
-            when (type) {
-                "BANK" -> {
-                    iconView?.setImageResource(R.drawable.ic_bank)
-                    overlayView?.findViewById<TextView>(R.id.info_text)?.text = "신한은행"
-                }
-                else -> {
-                    iconView?.setImageResource(R.drawable.ic_phone)
-                    overlayView?.findViewById<TextView>(R.id.info_text)?.text = "일반 전화"
-                }
-            }
-        }
+        overlayRoot?.setBackgroundColor(ContextCompat.getColor(context, type.color))
+        iconView?.setImageResource(type.image)
+        overlayView?.findViewById<TextView>(R.id.info_text)?.text = description
 
         // 닫기 버튼
         overlayView?.findViewById<ImageView>(R.id.close_button)?.setOnClickListener {

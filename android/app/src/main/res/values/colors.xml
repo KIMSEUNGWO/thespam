@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 기존 색상들... -->
     <color name="red">#E42323</color>
     <color name="green">#41BA45</color>
+    <color name="grey">#B7B7B7</color>
 </resources>

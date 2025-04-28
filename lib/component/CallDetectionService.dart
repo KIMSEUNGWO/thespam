@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:spam2/domain/Phone.dart';
 
 class CallDetectionService {
   static final CallDetectionService _instance = CallDetectionService._internal();
@@ -83,10 +84,12 @@ class CallDetectionService {
     switch (call.method) {
       case 'onCallDetected':
         final data = jsonDecode(call.arguments as String);
-        _handleCallDetected(
-            data['phoneNumber'],
-            data['type']
+        Phone phone = Phone(
+          phoneNumber: data['phoneNumber'],
+          type: PhoneType.valueOf(data['type']),
+          description: data['description'],
         );
+        _handleCallDetected(phone);
         break;
       case 'onCallIdle':
         print('onCallIdle 호출 성공');
@@ -97,8 +100,8 @@ class CallDetectionService {
     return null;
   }
 
-  void _handleCallDetected(String phoneNumber, String type) async {
-    print('전화 감지: $phoneNumber, 타입: $type');
+  void _handleCallDetected(Phone phone) async {
+    print('전화 감지: ${phone.phoneNumber}, 타입: ${phone.type}, 설명 : ${phone.description}');
   }
 
 
