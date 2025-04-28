@@ -31,7 +31,4 @@ class SearchService {
     }
   }
 
-  get(String phoneNumber) async {
-    return await ApiService().get(phoneNumber);
-  }
 }

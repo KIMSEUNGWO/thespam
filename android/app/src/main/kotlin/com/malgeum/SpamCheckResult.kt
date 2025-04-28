@@ -1,4 +1,4 @@
-package com.example.spam2
+package com.malgeum
 
 class SpamCheckResult(
     val phoneNumber : String,

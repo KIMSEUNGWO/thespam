@@ -1,4 +1,4 @@
-package com.example.spam2
+package com.malgeum
 
 import org.json.JSONObject
 import java.io.BufferedReader

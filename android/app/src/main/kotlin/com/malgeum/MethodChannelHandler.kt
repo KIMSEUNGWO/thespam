@@ -1,4 +1,4 @@
-package com.example.spam2
+package com.malgeum
 
 import android.util.Log
 import io.flutter.plugin.common.MethodChannel

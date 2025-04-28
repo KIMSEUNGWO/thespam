@@ -1,4 +1,4 @@
-package com.example.spam2
+package com.malgeum
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

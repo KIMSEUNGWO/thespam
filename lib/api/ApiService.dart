@@ -1,8 +1,7 @@
 
-// import 'package:couplink_app/component/secure_strage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:spam2/component/local_storage.dart';
 
 class ApiService {
   // 싱글톤 패턴 구현
@@ -14,7 +13,8 @@ class ApiService {
 
   // API 기본 URL - 환경에 맞게 수정 필요
   // final String baseUrl = 'https://api.duodate.com/api';
-  final String baseUrl = 'http://localhost:8080';
+  // final String baseUrl = 'http://10.0.2.2:8080/api/v1';
+  final String baseUrl = 'https://others-blvd-constraints-ment.trycloudflare.com/api/v1';
 
   ApiService._internal() {
     _initDio();
@@ -32,10 +32,7 @@ class ApiService {
     // JWT 토큰 인터셉터
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // final token = await _storage.readAccessToken();
-        // if (token != null) {
-        //   options.headers['Authorization'] = 'Bearer $token';
-        // }
+        options.headers['Authorization'] = await LocalStorage().generateDeviceId();
         return handler.next(options);
       },
       onError: (error, handler) async {
@@ -59,60 +56,16 @@ class ApiService {
     }
   }
 
-  get(String phoneNumber) async {
-    await dio.get('http://3.38.190.123/health');
-  }
-
-  // // 토큰 갱신 시도
-  // Future<bool> _refreshToken() async {
-  //   try {
-  //     final refreshToken = await _storage.readRefreshToken();
-  //     if (refreshToken == null) return false;
-  //
-  //     // 토큰 갱신 API 호출
-  //     final response = await Dio().post(
-  //       '$baseUrl/auth/refresh',
-  //       data: {'refreshToken': refreshToken},
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       // 새 토큰 저장
-  //       await _storage.writeAccessToken(response.data['accessToken']);
-  //       if (response.data['refreshToken'] != null) {
-  //         await _storage.writeRefreshToken(response.data['refreshToken']);
-  //       }
-  //       return true;
-  //     }
-  //
-  //     return false;
-  //   } catch (e) {
-  //     debugPrint('토큰 갱신 오류: $e');
-  //     return false;
-  //   }
-  // }
-  //
-  // // 토큰 갱신 후 원래 요청 재시도
-  // Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
-  //   final options = Options(
-  //     method: requestOptions.method,
-  //     headers: requestOptions.headers,
-  //   );
-  //
-  //   return dio.request<dynamic>(
-  //     requestOptions.path,
-  //     data: requestOptions.data,
-  //     queryParameters: requestOptions.queryParameters,
-  //     options: options,
-  //   );
-  // }
-
   // 5. 기기 등록/업데이트
-  Future<Response> registerDevice(String deviceId, String fcmToken) async {
+  Future<Response?> deviceLogin() async {
+    String? fcmToken = await LocalStorage().generateFcmToken();
+    if (fcmToken == null) {
+      debugPrint('FCM 토큰 생성 실패!');
+      return null;
+    }
     try {
-      return await dio.post('/devices', data: {
-        'deviceId': deviceId,
+      return await dio.post('/login', data: {
         'fcmToken': fcmToken,
-        'deviceName': await _getDeviceInfo(),
       });
     } catch (e) {
       debugPrint('기기 등록 오류: $e');

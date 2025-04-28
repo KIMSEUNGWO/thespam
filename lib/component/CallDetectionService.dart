@@ -5,7 +5,7 @@ class CallDetectionService {
   static final CallDetectionService _instance = CallDetectionService._internal();
   factory CallDetectionService() => _instance;
 
-  final MethodChannel _channel = const MethodChannel('com.example.spam2/call_detection');
+  final MethodChannel _channel = const MethodChannel('com.malgeum/call_detection');
 
   CallDetectionService._internal() {
     _channel.setMethodCallHandler(_handleMethodCall);

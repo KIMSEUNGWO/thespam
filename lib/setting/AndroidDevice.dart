@@ -6,7 +6,7 @@ import 'Device.dart';
 
 class AndroidDevice extends Device {
 
-  final MethodChannel _channel = const MethodChannel('com.example.spam2/call_detection');
+  final MethodChannel _channel = const MethodChannel('com.malgeum/call_detection');
 
   @override
   init() async {

@@ -1,4 +1,4 @@
-package com.example.spam2
+package com.malgeum
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -18,7 +18,7 @@ import android.net.Uri
 import androidx.annotation.RequiresApi
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.example.spam2/call_detection"
+    private val CHANNEL = "com.malgeum/call_detection"
 
     private var pendingPermissionResult: MethodChannel.Result? = null
     private val REQUEST_PERMISSIONS_CODE = 1003

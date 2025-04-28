@@ -1,4 +1,4 @@
-package com.example.spam2
+package com.malgeum
 
 import android.content.Context
 import android.os.CountDownTimer

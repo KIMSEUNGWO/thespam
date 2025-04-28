@@ -1,11 +1,26 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spam2/notifier/ServiceNotifier.dart';
+import 'package:spam2/InitManager.dart';
+import 'package:spam2/api/ApiService.dart';
+import 'package:spam2/api/FirebaseApi.dart';
+import 'package:spam2/component/LocalNotification.dart';
+import 'package:spam2/component/local_storage.dart';
+import 'package:spam2/firebase_options.dart';
 import 'package:spam2/setting/DeviceController.dart';
 import 'package:spam2/widget/HomeWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await LocalNotification().init();
+  await FirebaseApi().initNotifications();
+  await LocalStorage().init();
+  final apiService = ApiService();
+  apiService.deviceLogin();
+
   DeviceHelper().init();
   runApp(const ProviderScope(
     child: MyApp()),
@@ -109,4 +124,20 @@ _themeData() {
       ),
     ),
   );
+}
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // 백그라운드에서 Firebase 초기화가 필요합니다
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  print("백그라운드 메시지 처리: ${message.messageId}");
+  print("메시지 데이터: ${message.data}");
+
+  if (message.notification != null) {
+    print("알림 제목: ${message.notification?.title}");
+    print("알림 내용: ${message.notification?.body}");
+  }
 }

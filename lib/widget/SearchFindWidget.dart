@@ -18,11 +18,11 @@ class _SearchFindWidgetState extends State<SearchFindWidget> {
   late final SearchResult _result;
 
   init() async {
-    final stopwatch = Stopwatch()..start();
-    await SearchService().get('010-1234-5678');
+    // final stopwatch = Stopwatch()..start();
+    // await SearchService().get('010-1234-5678');
     // _result = await SearchService().search(phoneNumber: widget.phoneNumber);
-    stopwatch.stop();
-    print('요청-응답 소요 시간: ${stopwatch.elapsedMilliseconds} ms');
+    // stopwatch.stop();
+    // print('요청-응답 소요 시간: ${stopwatch.elapsedMilliseconds} ms');
   }
   @override
   void initState() {

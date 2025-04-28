@@ -1,4 +1,4 @@
-package com.example.spam2
+package com.malgeum
 
 import android.os.Build
 import android.telecom.Call
@@ -9,8 +9,7 @@ import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.example.spam2.SpamCheckResult
-import org.json.JSONObject
+import com.malgeum.SpamCheckResult
 
 @RequiresApi(Build.VERSION_CODES.N)
 class CallScreenService : CallScreeningService() {
