@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spam2/component/FontTheme.dart';
 import 'package:spam2/component/svg_icon.dart';
 import 'package:spam2/notifier/ServiceNotifier.dart';
+import 'package:spam2/widget/RecordWidget.dart';
 import 'package:spam2/widget/SearchWidget.dart';
 import 'package:spam2/widget/status/StatusScreen.dart';
 import 'dart:math' as math;
@@ -125,8 +126,13 @@ class _HomeWidgetState extends ConsumerState<HomeWidget> {
                               ),
                               const SizedBox(height: 26,),
                               GestureDetector(
-
-                                child: Padding(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                    return const RecordWidget();
+                                  },));
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(),
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

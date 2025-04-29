@@ -1,10 +1,14 @@
 package com.malgeum
 
+import android.content.Context
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+
+import com.malgeum.model.Phone
+import com.malgeum.model.PhoneType
 
 class ApiServer {
 
@@ -13,17 +17,20 @@ class ApiServer {
         const val BASE_URL = "http://10.0.2.2:8080/api/v1"
 //        const val BASE_URL = "http://3.38.190.123/health"
 
-        fun spamCheck(phoneNumber: String): Phone {
+        fun spamCheck(context : Context, phoneNumber: String): Phone {
 //            val apiUrl = "$BASE_URL/spam";
             val apiUrl = "$BASE_URL/phone?phone=$phoneNumber";
             val url = URL(apiUrl)
             val connection = url.openConnection() as HttpURLConnection
 
+            val deviceId = LocalStorage.getInstance(context).getDeviceToken();
             try {
                 // HTTP 요청 설정
                 connection.requestMethod = "GET"
                 connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("Authorization", deviceId);
                 connection.doOutput = true
+
 
                 // 요청 본문 작성
 //                val jsonInput = JSONObject()

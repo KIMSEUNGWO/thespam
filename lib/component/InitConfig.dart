@@ -1,0 +1,5 @@
+
+abstract class InitConfig {
+
+  init();
+}

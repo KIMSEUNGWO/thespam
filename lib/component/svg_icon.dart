@@ -42,8 +42,10 @@ class SIcon {
   static const SIcon search = SIcon(picture: 'assets/icons/search.svg', width: 24, height: 24);
   static const SIcon clock = SIcon(picture: 'assets/icons/menu_clock.svg', width: 20, height: 20);
   static const SIcon block = SIcon(picture: 'assets/icons/menu_block.svg', width: 20, height: 20);
+  static const SIcon unblock = SIcon(picture: 'assets/icons/unblock.svg', width: 20, height: 20);
   static const SIcon notify = SIcon(picture: 'assets/icons/notify.svg', width: 16, height: 16);
   static const SIcon report = SIcon(picture: 'assets/icons/report.svg', width: 22, height: 22);
+  static const SIcon info = SIcon(picture: 'assets/icons/info.svg', width: 21, height: 21);
 
   static const SIcon toggleProtect = SIcon(picture: 'assets/icons/toggle_protect.svg', width: 26, height: 26);
   static const SIcon toggleStop = SIcon(picture: 'assets/icons/toggle_stop.svg', width: 26, height: 26);

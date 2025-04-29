@@ -29,7 +29,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
                     Log.e("PhoneStateReceiver", "!!!!! 통화 종료 감지 !!!!!")
                     OverlayView.getInstance(context).removeOverlay();
                     CallManager.cancelTimer()
-                    MethodChannelHandler.sendCallExit()
                 }
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> {
                     Log.e("PhoneStateReceiver", "!!!!! 통화 중 감지 !!!!!")

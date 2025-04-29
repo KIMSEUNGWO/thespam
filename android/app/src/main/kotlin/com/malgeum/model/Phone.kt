@@ -1,4 +1,4 @@
-package com.malgeum
+package com.malgeum.model
 
 class Phone(
     var phoneId: Long,

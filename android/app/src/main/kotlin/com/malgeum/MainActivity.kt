@@ -16,6 +16,8 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import android.net.Uri
 import androidx.annotation.RequiresApi
+import com.malgeum.blocked.BlockedRepository
+import com.malgeum.service.ServiceUtil
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.malgeum/call_detection"
@@ -29,6 +31,9 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
 
         super.configureFlutterEngine(flutterEngine)
+
+        BlockedRepository.setupChannel(flutterEngine.dartExecutor.binaryMessenger, context)
+
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).apply {
             setMethodCallHandler { call, result ->
@@ -82,7 +87,7 @@ class MainActivity: FlutterActivity() {
                         }
                     }
                     "isCallDetectionServiceRunning" -> {
-                        val isServiceRunning = isServiceRunning(CallDetectionService::class.java)
+                        val isServiceRunning = ServiceUtil.isDetectServiceRunning(context)
                         Log.d("MainActivity", "통화 감지 서비스 실행 상태: $isServiceRunning")
                         result.success(isServiceRunning)
                     }
@@ -211,7 +216,7 @@ class MainActivity: FlutterActivity() {
         Log.d("MainActivity", "onResume - 서비스 상태 확인")
 
         // 서비스 시작 상태 로그
-        val isServiceRunning = isServiceRunning(CallDetectionService::class.java)
+        val isServiceRunning = ServiceUtil.isDetectServiceRunning(context)
         Log.d("MainActivity", "서비스 실행 중: $isServiceRunning")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -225,11 +230,6 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        return manager.getRunningServices(Integer.MAX_VALUE)
-            .any { it.service.className == serviceClass.name }
-    }
 
     private fun checkAllPermissions() {
         Log.d("MainActivity", "권한 상태 확인:")

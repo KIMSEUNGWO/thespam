@@ -1,28 +1,11 @@
 
 import 'package:spam2/component/svg_icon.dart';
+import 'package:spam2/domain/Phone.dart';
 
 class SearchResult {
 
-  final String phone;
-  final SearchType type;
+  final Phone phone;
   final bool alreadyReported;
 
-  SearchResult({required this.phone, required this.type, required this.alreadyReported});
-}
-
-enum SearchType {
-
-  SAFE,
-  SPAM,
-  NONE
-  ;
-
-
-  getIcon() {
-    return switch (this) {
-      SearchType.SAFE => SvgIcon.asset(sIcon: SIcon.searchSafe),
-      SearchType.SPAM => SvgIcon.asset(sIcon: SIcon.searchWarning),
-      SearchType.NONE => SvgIcon.asset(sIcon: SIcon.searchNotFound),
-    };
-  }
+  SearchResult({required this.phone, required this.alreadyReported});
 }

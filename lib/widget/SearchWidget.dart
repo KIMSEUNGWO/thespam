@@ -20,14 +20,14 @@ class _SearchWidgetState extends State<SearchWidget> {
   bool _canSearch = false;
 
   _search() {
-    final phoneNumber = _controller.text;
-
+    final phoneNumber = _controller.text.replaceAll(RegExp(r'[^\d]'), '');
+    _controller.text = '';
     Dropdown.show(context,
       widget: SearchFindWidget(phoneNumber: phoneNumber),
     );
   }
   _phoneNumberChanged(String text) {
-    _controller.text = _formatType.format(text);
+    _controller.text = _formatType.format(text, ' ');
 
     setState(() {
       _canSearch = _controller.text.isNotEmpty;

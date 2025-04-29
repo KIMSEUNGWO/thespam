@@ -82,15 +82,6 @@ class CallDetectionService {
   // 네이티브에서 호출하는 메서드 핸들러
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
-      case 'onCallDetected':
-        final data = jsonDecode(call.arguments as String);
-        Phone phone = Phone(
-          phoneNumber: data['phoneNumber'],
-          type: PhoneType.valueOf(data['type']),
-          description: data['description'],
-        );
-        _handleCallDetected(phone);
-        break;
       case 'onCallIdle':
         print('onCallIdle 호출 성공');
         break;
@@ -98,10 +89,6 @@ class CallDetectionService {
         print('알 수 없는 메서드 호출: ${call.method}');
     }
     return null;
-  }
-
-  void _handleCallDetected(Phone phone) async {
-    print('전화 감지: ${phone.phoneNumber}, 타입: ${phone.type}, 설명 : ${phone.description}');
   }
 
 

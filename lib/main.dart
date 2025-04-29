@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spam2/InitManager.dart';
 import 'package:spam2/api/ApiService.dart';
 import 'package:spam2/api/FirebaseApi.dart';
 import 'package:spam2/component/LocalNotification.dart';
@@ -14,6 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  await InitManager().init();
   await LocalNotification().init();
   await FirebaseApi().initNotifications();
   await LocalStorage().init();

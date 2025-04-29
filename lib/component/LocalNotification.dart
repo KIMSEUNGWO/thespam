@@ -49,7 +49,6 @@ class LocalNotification {
   }
 
   _permissionWithNotification() async {
-    print('permission : ${await Permission.notification.isGranted}');
     if (await Permission.notification.isDenied &&
         !await Permission.notification.isPermanentlyDenied) {
       await [Permission.notification].request();

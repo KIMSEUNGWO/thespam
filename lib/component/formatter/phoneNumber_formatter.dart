@@ -5,5 +5,5 @@ abstract class PhoneNumberFormatter {
 
   String getOnlyNumber(String text) => text.replaceAll(rex, '');
 
-  String format(String phone);
+  String format(String phone, String separate);
 }

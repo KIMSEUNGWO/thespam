@@ -5,11 +5,16 @@ import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.malgeum.component.LocalStorage
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+import com.malgeum.model.Phone
+import com.malgeum.model.PhoneType
+import com.malgeum.blocked.BlockedService
+import com.malgeum.model.RecordType
+import com.malgeum.service.ServiceUtil
 
 @RequiresApi(Build.VERSION_CODES.N)
 class CallScreenService : CallScreeningService() {
@@ -28,6 +33,16 @@ class CallScreenService : CallScreeningService() {
 
 
     override fun onScreenCall(callDetails: Call.Details) {
+
+        val isRunning = ServiceUtil.isDetectServiceRunning(this)
+        Log.d("CallScreenService", "isRunning : $isRunning")
+        if (!isRunning) {
+            Log.d("CallScreenService", "onScreenCall 호출됨, 서비스 중지되어있음")
+            sendDefaultCall(callDetails)
+            return
+        }
+
+
         Log.e("CallScreenService", "!!!!! onScreenCall 호출됨 !!!!!")
 
         // 전화 방향 확인 (수신/발신)
@@ -61,11 +76,16 @@ class CallScreenService : CallScreeningService() {
                     val response = CallResponse.Builder()
                         .setDisallowCall(true)  // 통화 차단
                         .setRejectCall(true)    // 거절
-                        .setSkipCallLog(false)   // 통화 기록 남김
+                        .setSkipCallLog(true)   // 통화 기록 남기지않음
                         .setSkipNotification(false) // 알림 표시
                         .build()
                     respondToCall(callDetails, response)
-                    LocalStorage.getInstance(applicationContext).appendBlockedNumberRecord(phoneNumber)
+                    BlockedService.getInstance(this@CallScreenService).addRecord(
+                        phoneNumber = phoneNumber,
+                        type = RecordType.MISSED_CALL,
+                        isBlocked = true,
+                        seconds = 0
+                    )
                 } else {
                     val spamCheckResult = checkSpamNumber(phoneNumber)
                     Log.e("CallScreenService", "!!!!! 스팸 여부: ${spamCheckResult.type} !!!!!")
@@ -86,10 +106,9 @@ class CallScreenService : CallScreeningService() {
                         description = spamCheckResult.description,
                         type = spamCheckResult.type,
                     )
-                    // Flutter 앱에 전화 정보 전달
+
                     if (spamCheckResult.type == PhoneType.SPAM) {
                         CallManager.setSpamResult(spamCheckResult)
-                        MethodChannelHandler.sendCallInfo(spamCheckResult)
                     }
                 }
 
@@ -114,6 +133,6 @@ class CallScreenService : CallScreeningService() {
     }
 
     private fun checkSpamNumber(phoneNumber: String): Phone {
-        return ApiServer.spamCheck(phoneNumber)
+        return ApiServer.spamCheck(this, phoneNumber)
     }
 }

@@ -1,4 +1,6 @@
-package com.malgeum
+package com.malgeum.model
+
+import com.malgeum.R
 
 enum class PhoneType(val color: Int, val image: Int) {
     UNKNOWN(R.color.grey, R.drawable.symbol_unknown),

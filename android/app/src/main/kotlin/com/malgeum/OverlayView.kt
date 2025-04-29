@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import com.malgeum.model.PhoneType
 
 class OverlayView private constructor(private val context: Context) {
 

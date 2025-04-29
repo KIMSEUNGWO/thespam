@@ -8,7 +8,7 @@ enum FormatType {
   final PhoneNumberFormatter _formatter;
   const FormatType(this._formatter);
 
-  format(String text) {
-    return _formatter.format(text);
+  format(String text, [String separate = '-']) {
+    return _formatter.format(text, separate);
   }
 }

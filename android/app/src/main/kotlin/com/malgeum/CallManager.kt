@@ -4,6 +4,9 @@ import android.content.Context
 import android.os.CountDownTimer
 import android.util.Log
 
+import com.malgeum.model.Phone
+import com.malgeum.model.PhoneType
+
 // CallManager.kt - 싱글톤으로 통화 관련 상태 관리
 object CallManager {
     private var timer: CountDownTimer? = null
