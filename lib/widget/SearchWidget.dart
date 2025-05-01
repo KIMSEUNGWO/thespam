@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:spam2/component/FontTheme.dart';
+import 'package:spam2/component/SnackbarUtil.dart';
 import 'package:spam2/component/dropdown.dart';
 import 'package:spam2/component/formatter/FormatType.dart';
 import 'package:spam2/component/svg_icon.dart';
@@ -21,7 +22,13 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   _search() {
     final phoneNumber = _controller.text.replaceAll(RegExp(r'[^\d]'), '');
+
+    if (phoneNumber.isEmpty) {
+      SnackbarUtil.show(context, const Text('휴대폰 번호를 입력해주세요.'));
+      return;
+    }
     _controller.text = '';
+    setState(() => _canSearch = false);
     Dropdown.show(context,
       widget: SearchFindWidget(phoneNumber: phoneNumber),
     );

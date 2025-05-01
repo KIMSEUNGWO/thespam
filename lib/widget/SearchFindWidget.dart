@@ -18,7 +18,7 @@ class SearchFindWidget extends StatefulWidget {
 
 class _SearchFindWidgetState extends State<SearchFindWidget> {
 
-  late final SearchResult _result;
+  late final SearchResult? _result;
   final FormatType _formatType = FormatType.KR;
   bool _isLoading = true;
 
@@ -28,9 +28,9 @@ class _SearchFindWidgetState extends State<SearchFindWidget> {
   _blockToggle() async {
     setState(() => _blockedLoading = true);
     if (_isBlocked) {
-      await HiveBox().deleteBlockedNumber(_result.phone.phoneId);
+      await HiveBox().deleteBlockedNumber(_result!.phone.phoneId);
     } else {
-      await HiveBox().addBlockedNumber(_result.phone);
+      await HiveBox().addBlockedNumber(_result!.phone);
     }
     _isBlocked = !_isBlocked;
     await Future.delayed(const Duration(seconds: 1));
@@ -39,9 +39,7 @@ class _SearchFindWidgetState extends State<SearchFindWidget> {
   }
   init() async {
     _result = await SearchService().search(phoneNumber: widget.phoneNumber);
-    _isBlocked = HiveBox().isBlockedNumber(_result.phone.phoneNumber);
-    print(_result.phone.phoneNumber);
-    print('isBlocked : $_isBlocked');
+    _isBlocked = _result != null ? HiveBox().isBlockedNumber(_result.phone.phoneNumber) : false;
     setState(() {
       _isLoading = false;
     });
@@ -55,6 +53,9 @@ class _SearchFindWidgetState extends State<SearchFindWidget> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const CupertinoActivityIndicator();
+    }
+    if (_result == null) {
+      return Text('서버와 연결에 실패했습니다.');
     }
     return Expanded(
       child: Column(

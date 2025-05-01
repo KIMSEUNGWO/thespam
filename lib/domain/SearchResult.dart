@@ -8,4 +8,9 @@ class SearchResult {
   final bool alreadyReported;
 
   SearchResult({required this.phone, required this.alreadyReported});
+
+  SearchResult.fromJson(Map<String, dynamic> json):
+    phone = Phone.fromDynamic(json),
+    alreadyReported = json['alreadyReported'] != null ? json['alreadyReported'] as bool : false;
+
 }

@@ -1,10 +1,18 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_callkit_incoming/entities/call_event.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:spam2/component/FontTheme.dart';
 import 'package:spam2/setting/Device.dart';
 
 class IOSDevice extends Device {
+
+  // final permissions = [
+  //   Permission.phone,
+  //   Permission.contacts
+  // ];
 
   @override
   init() async {
@@ -45,33 +53,74 @@ class IOSDevice extends Device {
   }
 
   @override
-  Future<bool> checkPermission() {
-    // TODO: implement checkPermission
-    throw UnimplementedError();
+  Future<bool> checkPermission() async {
+    // for (var permission in permissions) {
+    //   if (await permission.isDenied) {
+    //     return false;
+    //   }
+    // }
+    return await Permission.phone.isGranted;
   }
 
   @override
-  Future<bool> startService() {
-    // TODO: implement startService
-    throw UnimplementedError();
+  Future<bool> startService() async {
+    return true;
   }
 
   @override
-  Future<bool> isServiceRunning() {
-    // TODO: implement isServiceRunning
-    throw UnimplementedError();
+  Future<bool> isServiceRunning() async {
+    return true;
   }
 
   @override
-  Future<bool> stopService() {
-    // TODO: implement stopService
-    throw UnimplementedError();
+  Future<bool> stopService() async {
+    return true;
   }
 
   @override
-  Future<bool> requestPermissions() {
-    // TODO: implement requestPermissions
-    throw UnimplementedError();
+  Future<bool> requestPermissions(BuildContext context) async {
+    var phoneStatus = await Permission.phone.request();
+
+    // 권한 상태 확인
+    if (phoneStatus.isGranted) {
+      print('전화 권한이 허용되었습니다.');
+    } else {
+      print('전화 권한이 거부되었습니다.');
+      // 사용자에게 권한 필요성 설명
+    }
+
+    // iOS CallKit 설정으로 이동 안내
+    openCallKitSettings(context);
+    return true;
+  }
+
+  void openCallKitSettings(BuildContext context) {
+    // iOS에서는 사용자가 직접 설정에서 '전화 차단 및 발신자 확인' 활성화 필요
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('추가 설정 필요'),
+        content: Text('전화 차단 기능을 사용하려면 설정 앱에서 "전화 > 전화 차단 및 발신자 확인"에서 앱을 활성화해주세요.',
+          style: TextStyle(
+            color: FontColor.f2.get(context)
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // iOS 설정 앱 열기
+              openAppSettings();
+              Navigator.pop(context);
+            },
+            child: Text('설정으로 이동'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('나중에'),
+          ),
+        ],
+      ),
+    );
   }
 
 

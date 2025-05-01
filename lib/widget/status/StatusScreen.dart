@@ -28,7 +28,7 @@ class _StatusScreenState extends ConsumerState<StatusScreen> {
 
   _requestPermissions() async {
     widget.loading(true);
-    await ref.read(serviceNotifier.notifier).requestPermissions();
+    await ref.read(serviceNotifier.notifier).requestPermissions(context);
     widget.loading(false);
   }
 

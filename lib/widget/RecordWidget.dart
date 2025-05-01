@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:spam2/component/FontTheme.dart';
 import 'package:spam2/component/HiveBox.dart';
+import 'package:spam2/component/SnackbarUtil.dart';
 import 'package:spam2/component/formatter/FormatType.dart';
 import 'package:spam2/component/svg_icon.dart';
 import 'package:spam2/domain/Phone.dart';
@@ -70,6 +71,7 @@ class _RecordWidgetState extends State<RecordWidget> {
     setState(() {
       _records.remove(record);
     });
+    SnackbarUtil.show(context, const Text('삭제했습니다.'));
     print('length : ${_records.length}');
   }
 
@@ -113,132 +115,135 @@ class _RecordWidgetState extends State<RecordWidget> {
         title: const Text('통화 기록'),
       ),
       body: _isLoading ? const CupertinoActivityIndicator() :
-        ListView.separated(
-          separatorBuilder: (context, index) => const SizedBox(height: 3,),
-          itemCount: _records.length,
-          itemBuilder: (context, index) {
-            final record = _records[index];
-            return Slidable(
-              key: UniqueKey(),
-              closeOnScroll: true,
-              endActionPane: ActionPane(
-                motion: const DrawerMotion(),
-                extentRatio: 0.2,
-                dismissible: DismissiblePane(
-                  dismissThreshold: 0.5,
-                  onDismissed: () {
-                    _onDelete(record);
-                  },
-                ),
-                children: [
-                  SlidableAction(
-                    onPressed: (context) {
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(height: 3,),
+            itemCount: _records.length,
+            itemBuilder: (context, index) {
+              final record = _records[index];
+              return Slidable(
+                key: UniqueKey(),
+                closeOnScroll: true,
+                endActionPane: ActionPane(
+                  motion: const DrawerMotion(),
+                  extentRatio: 0.2,
+                  dismissible: DismissiblePane(
+                    dismissThreshold: 0.5,
+                    onDismissed: () {
                       _onDelete(record);
                     },
-                    backgroundColor: Color(0xFFED6666),
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
                   ),
-                ],
-              ),
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  // 배경색 제거
-                  backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-                  // 그림자 제거
-                  elevation: WidgetStatePropertyAll(0),
-                  // 패딩 제거
-                  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                  // 테두리 제거
-                  side: WidgetStatePropertyAll(BorderSide.none),
-                  // 모서리 둥글기 제거
-                  shape: WidgetStatePropertyAll(BeveledRectangleBorder()),
-                  // 최소 크기 제거
-                  minimumSize: WidgetStatePropertyAll(Size.zero),
-                  // 그림자 색상 제거
-                  shadowColor: WidgetStatePropertyAll(Colors.transparent),
-                  // 내부 패딩(tapTargetSize) 최소화
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        _onDelete(record);
+                      },
+                      backgroundColor: Color(0xFFED6666),
+                      foregroundColor: Colors.white,
+                      icon: Icons.delete,
+                    ),
+                  ],
                 ),
-                onPressed: () {
+                child: ElevatedButton(
+                  style: const ButtonStyle(
+                    // 배경색 제거
+                    backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                    // 그림자 제거
+                    elevation: WidgetStatePropertyAll(0),
+                    // 패딩 제거
+                    padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                    // 테두리 제거
+                    side: WidgetStatePropertyAll(BorderSide.none),
+                    // 모서리 둥글기 제거
+                    shape: WidgetStatePropertyAll(BeveledRectangleBorder()),
+                    // 최소 크기 제거
+                    minimumSize: WidgetStatePropertyAll(Size.zero),
+                    // 그림자 색상 제거
+                    shadowColor: WidgetStatePropertyAll(Colors.transparent),
+                    // 내부 패딩(tapTargetSize) 최소화
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  onPressed: () {
 
-                },
-                child: Container(
-                  height: 80,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SvgIcon.asset(sIcon: record.phone.type.icon,
-                            style: SvgIconStyle(width: 40, height: 40)
-                          ),
-                          const SizedBox(width: 12,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(FormatType.KR.format(record.phone.phoneNumber),
-                                style: FontTheme.of(context,
-                                  fontColor: record.isBlocked || record.type == RecordType.MISSED_CALL ? null : FontColor.f1,
-                                  color: record.isBlocked || record.type == RecordType.MISSED_CALL ? const Color(0xFFE42323) : null,
-                                  weight: FontWeight.w500,
-                                  size: FontSize.bodyLarge,
+                  },
+                  child: Container(
+                    height: 80,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            SvgIcon.asset(sIcon: record.phone.type.icon,
+                              style: SvgIconStyle(width: 40, height: 40)
+                            ),
+                            const SizedBox(width: 12,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('${FormatType.KR.format(record.phone.phoneNumber)} ${record.detail.length > 1 ? "(${record.detail.length})" : ""}',
+                                  style: FontTheme.of(context,
+                                    fontColor: record.isBlocked || record.type == RecordType.MISSED_CALL ? null : FontColor.f1,
+                                    color: record.isBlocked || record.type == RecordType.MISSED_CALL ? const Color(0xFFE42323) : null,
+                                    weight: FontWeight.w500,
+                                    size: FontSize.bodyLarge,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 2,),
-                              Row(
-                                children: [
-                                  if (record.isBlocked)
-                                    Text('차단됨',
+                                const SizedBox(height: 2,),
+                                Row(
+                                  children: [
+                                    if (record.isBlocked)
+                                      Text('차단됨',
+                                        style: FontTheme.of(context,
+                                          color: const Color(0xFFE42323),
+                                          weight: FontWeight.w500,
+                                          size: FontSize.bodyMedium,
+                                        ),
+                                      ),
+                                    if (record.isBlocked)
+                                      Container(
+                                        width: 2, height: 2,
+                                        margin: const EdgeInsets.symmetric(horizontal: 6),
+                                        decoration: BoxDecoration(
+                                          color: FontColor.f3.get(context)
+                                        ),
+                                      ),
+                                    Text(record.phone.description,
                                       style: FontTheme.of(context,
-                                        color: const Color(0xFFE42323),
+                                        fontColor: FontColor.f3,
                                         weight: FontWeight.w500,
                                         size: FontSize.bodyMedium,
                                       ),
                                     ),
-                                  if (record.isBlocked)
-                                    Container(
-                                      width: 2, height: 2,
-                                      margin: const EdgeInsets.symmetric(horizontal: 6),
-                                      decoration: BoxDecoration(
-                                        color: FontColor.f3.get(context)
-                                      ),
-                                    ),
-                                  Text(record.phone.description,
-                                    style: FontTheme.of(context,
-                                      fontColor: FontColor.f3,
-                                      weight: FontWeight.w500,
-                                      size: FontSize.bodyMedium,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
 
-                      Row(
-                        children: [
-                          Text(formatDateTime(record.detail.last.time,),
-                            style: FontTheme.of(context,
-                              fontColor: FontColor.f3,
-                              weight: FontWeight.w400,
-                              size: FontSize.bodyMedium,
+                        Row(
+                          children: [
+                            Text(formatDateTime(record.detail.last.time,),
+                              style: FontTheme.of(context,
+                                fontColor: FontColor.f3,
+                                weight: FontWeight.w400,
+                                size: FontSize.bodyMedium,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4,),
-                          SvgIcon.asset(sIcon: SIcon.info)
-                        ],
-                      )
-                    ],
+                            const SizedBox(width: 4,),
+                            SvgIcon.asset(sIcon: SIcon.info)
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
     );
   }

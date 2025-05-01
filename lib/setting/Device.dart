@@ -1,5 +1,7 @@
 
 
+import 'package:flutter/cupertino.dart';
+
 abstract class Device {
 
   init();
@@ -9,7 +11,7 @@ abstract class Device {
   }
 
   Future<bool> checkPermission();
-  Future<bool> requestPermissions();
+  Future<bool> requestPermissions(BuildContext context);
   Future<bool> startService();
   Future<bool> stopService();
   Future<bool> isServiceRunning();

@@ -26,7 +26,7 @@
     <uses-permission android:name="android.permission.BIND_SCREENING_SERVICE" />
 
     <application
-        android:label="malgeum"
+        android:label="통화맑음"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

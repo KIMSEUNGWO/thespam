@@ -1,6 +1,7 @@
 
+import 'dart:convert';
+
 import 'package:spam2/api/ApiService.dart';
-import 'package:spam2/domain/Phone.dart';
 import 'package:spam2/domain/SearchResult.dart';
 
 class SearchService {
@@ -10,23 +11,32 @@ class SearchService {
 
   SearchService._internal();
 
-  Future<SearchResult> search({required String phoneNumber}) async {
-    if (phoneNumber.startsWith('02')) {
-      return SearchResult(
-        phone: Phone(phoneId: 1, phoneNumber: '0212345678', type: PhoneType.UNKNOWN, description: '등록되지 않은 번호'),
-        alreadyReported: true,
-      );
-    } else if (phoneNumber.startsWith('010')) {
-      return SearchResult(
-        phone: Phone(phoneId: 1, phoneNumber: '01066666666', type: PhoneType.SAFE, description: '신한은행'),
-        alreadyReported: false,
-      );
-    } else {
-      return SearchResult(
-        phone: Phone(phoneId: 1, phoneNumber: '0212345678', type: PhoneType.SPAM, description: '설문조사'),
-        alreadyReported: true,
-      );
+  Future<SearchResult?> search({required String phoneNumber}) async {
+    final response = await ApiService().dio.get('/phone',
+      queryParameters: {'phone' : phoneNumber}
+    );
+
+    if (response.statusCode != 200) {
+      return null;
     }
+    final json = response.data as Map<String, dynamic>;
+    return SearchResult.fromJson(json);
+  }
+
+  Future<List<SearchResult>> findAll() async {
+    final response = await ApiService().dio.get('/phones');
+
+    if (response.statusCode != 200) {
+      return [];
+    }
+    List<SearchResult> temp = [];
+
+    final json = response.data as List<dynamic>;
+    for (var o in json) {
+      final a = SearchResult.fromJson(o);
+      temp.add(a);
+    }
+    return temp;
   }
 
 }

@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:spam2/component/CallDetectionService.dart';
 
@@ -14,7 +15,7 @@ class AndroidDevice extends Device {
   }
 
   @override
-  Future<bool> requestPermissions() async {
+  Future<bool> requestPermissions(BuildContext context) async {
     return await CallDetectionService().requestPermissions();
   }
 

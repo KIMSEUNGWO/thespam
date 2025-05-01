@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +10,7 @@ import 'package:spam2/component/svg_icon.dart';
 import 'package:spam2/notifier/ServiceNotifier.dart';
 import 'package:spam2/widget/RecordWidget.dart';
 import 'package:spam2/widget/SearchWidget.dart';
+import 'package:spam2/widget/status/IOSStatusScreen.dart';
 import 'package:spam2/widget/status/StatusScreen.dart';
 import 'dart:math' as math;
 
@@ -66,9 +69,9 @@ class _HomeWidgetState extends ConsumerState<HomeWidget> {
                 Positioned(
                   top: 0,
                   left: 0, right: 0,
-                  child: StatusScreen(
-                    loading: _setLoading,
-                  ),
+                  child: Platform.isAndroid
+                    ? StatusScreen(loading: _setLoading,)
+                    : IOSStatusScreen(loading: _setLoading),
                 ),
                 Container(
                   margin: EdgeInsets.only(

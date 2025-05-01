@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.spam2</string>
+	<string>com.malgeum</string>
 	<key>PROJECT_ID</key>
 	<string>malgeum-92912</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1011234514173:ios:e2d4b8f2d754ac24164a94</string>
+	<string>1:1011234514173:ios:b447bc1ff305b1e4164a94</string>
 </dict>
 </plist>

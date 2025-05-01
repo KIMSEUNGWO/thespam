@@ -38,7 +38,7 @@ class Phone {
 enum PhoneType {
 
   @HiveField(0)
-  UNKNOWN(icon: SIcon.searchNotFound, color: Color(0xFFB7B7B7)),
+  UNKNOWN(icon: SIcon.searchNotFound, color: Color(0xFF474747)),
   @HiveField(1)
   SAFE(icon: SIcon.searchSafe, color: Color(0xFF41BA45)),
   @HiveField(2)

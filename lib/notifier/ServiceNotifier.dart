@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spam2/enums/Status.dart';
 import 'package:spam2/setting/DeviceController.dart';
@@ -13,8 +14,8 @@ class ServiceNotifier extends StateNotifier<Status> {
     await _setState(hasPermission);
   }
 
-  requestPermissions() async {
-    bool hasPermission = await DeviceHelper().device.requestPermissions();
+  requestPermissions(BuildContext context) async {
+    bool hasPermission = await DeviceHelper().device.requestPermissions(context);
     await _setState(hasPermission);
   }
 

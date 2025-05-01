@@ -20,8 +20,7 @@ class FirebaseApi {
 
   //function to handle received Msg
   void handleMessage(RemoteMessage? message) {
-    //if the message is null , do nothing
-    if (message == null) return ;
+    if (message == null) return;
     print('mattabu: $message');
   }
 
@@ -35,16 +34,16 @@ class FirebaseApi {
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
+      print('Notification title : ${message.notification?.title}, body : ${message.notification?.body}');
       print('Message data: ${message.data}');
-      print('Notification : ${message.notification?.title}, ${message.notification?.body}');
-      if (message.notification == null) return;
-
-      final fcmMessage = FcmMessage.fromMap(message.data);
-
-      print('제목 : ${fcmMessage.title}, 내용 : ${fcmMessage.body}');
-      print('Message also contained a notification: ${message.notification}');
-
-      LocalNotification().show(fcmMessage);
+      // if (message.notification == null) return;
+      //
+      // final fcmMessage = FcmMessage.fromMap(message.data);
+      //
+      // print('제목 : ${fcmMessage.title}, 내용 : ${fcmMessage.body}');
+      // print('Message also contained a notification: ${message.notification}');
+      //
+      // LocalNotification().show(fcmMessage);
     });
   }
 }

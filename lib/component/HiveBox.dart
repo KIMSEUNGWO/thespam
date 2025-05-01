@@ -85,9 +85,7 @@ class HiveBox implements InitConfig {
 
   bool isBlockedNumber(String phoneNumber) {
     final box = Hive.box<Phone>(BLOCKED_NUMBER);
-    print('비교해봄~');
     for (var o in box.values) {
-      print('Box : ${o.phoneNumber} = 비교할 번호 : $phoneNumber');
       if (o.phoneNumber == phoneNumber) {
         return true;
       }

@@ -14,7 +14,8 @@ class ApiService {
   // API 기본 URL - 환경에 맞게 수정 필요
   // final String baseUrl = 'https://api.duodate.com/api';
   // final String baseUrl = 'http://10.0.2.2:8080/api/v1';
-  final String baseUrl = 'https://others-blvd-constraints-ment.trycloudflare.com/api/v1';
+  // final String baseUrl = 'http://localhost:8080/api/v1';
+  final String baseUrl = 'https://qualified-walker-scsi-vol.trycloudflare.com/api/v1';
 
   ApiService._internal() {
     _initDio();
